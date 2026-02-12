@@ -1,0 +1,250 @@
+<div class="appointment-container">
+  <!-- Başlık -->
+  <section class="page-header">
+    <h1>Randevu Al</h1>
+    <p class="subtitle">Size uygun tarih ve saati seçin, hemen başlayalım!</p>
+  </section>
+
+  <!-- Bilgilendirme Kartları -->
+  <div class="info-cards">
+    <mat-card class="info-card">
+      <mat-icon>access_time</mat-icon>
+      <h3>60 Dakika</h3>
+      <p>Ders Süresi</p>
+    </mat-card>
+    <mat-card class="info-card">
+      <mat-icon>videocam</mat-icon>
+      <h3>Online/Yüz Yüze</h3>
+      <p>Esnek Format</p>
+    </mat-card>
+    <mat-card class="info-card">
+      <mat-icon>emoji_events</mat-icon>
+      <h3>İlk Ders</h3>
+      <p>Ücretsiz Deneme</p>
+    </mat-card>
+  </div>
+
+  <!-- Ana İçerik -->
+  <div class="content-wrapper">
+    <!-- Sol Taraf - Takvim -->
+    <div class="calendar-section">
+      <mat-card>
+        <mat-card-header>
+          <mat-icon mat-card-avatar>calendar_month</mat-icon>
+          <mat-card-title>Tarih Seçin</mat-card-title>
+          <mat-card-subtitle>Müsait olduğunuz bir tarihi seçin</mat-card-subtitle>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <mat-calendar 
+            [(selected)]="selectedDate"
+            [minDate]="minDate"
+            [dateFilter]="dateFilter"
+            (selectedChange)="onDateSelected($event)"
+            class="appointment-calendar">
+          </mat-calendar>
+
+          <div *ngIf="selectedDate" class="selected-date-info">
+            <mat-icon>event</mat-icon>
+            <span>Seçilen Tarih: <strong>{{ selectedDate | date:'dd MMMM yyyy, EEEE':'tr' }}</strong></span>
+          </div>
+
+          <!-- Saat Seçimi -->
+          <div *ngIf="selectedDate" class="time-slots">
+            <h3>Uygun Saatler</h3>
+            <div class="time-grid">
+              <button 
+                *ngFor="let slot of availableTimeSlots"
+                mat-stroked-button
+                [class.selected]="selectedTime === slot"
+                [disabled]="slot.disabled"
+                (click)="selectTime(slot)">
+                {{ slot.time }}
+              </button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Sağ Taraf - Randevu Formu -->
+    <div class="form-section">
+      <mat-card>
+        <mat-card-header>
+          <mat-icon mat-card-avatar>person</mat-icon>
+          <mat-card-title>Bilgileriniz</mat-card-title>
+          <mat-card-subtitle>Randevu için gerekli bilgileri doldurun</mat-card-subtitle>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()" class="appointment-form">
+            <!-- Ad Soyad -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Ad Soyad</mat-label>
+              <input matInput formControlName="studentName" placeholder="Öğrenci adı ve soyadı">
+              <mat-icon matPrefix>person</mat-icon>
+              <mat-error *ngIf="appointmentForm.get('studentName')?.hasError('required')">
+                Ad soyad zorunludur
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Email -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Email</mat-label>
+              <input matInput type="email" formControlName="email" placeholder="ornek@email.com">
+              <mat-icon matPrefix>email</mat-icon>
+              <mat-error *ngIf="appointmentForm.get('email')?.hasError('required')">
+                Email zorunludur
+              </mat-error>
+              <mat-error *ngIf="appointmentForm.get('email')?.hasError('email')">
+                Geçerli bir email giriniz
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Telefon -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Telefon</mat-label>
+              <input matInput formControlName="phone" placeholder="5XX XXX XX XX">
+              <mat-icon matPrefix>phone</mat-icon>
+              <mat-error *ngIf="appointmentForm.get('phone')?.hasError('required')">
+                Telefon zorunludur
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Sınıf Seviyesi -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Sınıf Seviyesi</mat-label>
+              <mat-select formControlName="gradeLevel">
+                <mat-option value="5">5. Sınıf</mat-option>
+                <mat-option value="6">6. Sınıf</mat-option>
+                <mat-option value="7">7. Sınıf</mat-option>
+                <mat-option value="8">8. Sınıf</mat-option>
+                <mat-option value="9">9. Sınıf</mat-option>
+                <mat-option value="10">10. Sınıf</mat-option>
+                <mat-option value="11">11. Sınıf</mat-option>
+                <mat-option value="12">12. Sınıf</mat-option>
+                <mat-option value="university">Üniversite</mat-option>
+                <mat-option value="other">Diğer</mat-option>
+              </mat-select>
+              <mat-icon matPrefix>school</mat-icon>
+              <mat-error *ngIf="appointmentForm.get('gradeLevel')?.hasError('required')">
+                Sınıf seviyesi zorunludur
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Ders Konusu -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Ders Konusu / İhtiyaç</mat-label>
+              <mat-select formControlName="subject">
+                <mat-option value="genel">Genel Matematik Desteği</mat-option>
+                <mat-option value="sinav">Sınav Hazırlığı (LGS/YKS)</mat-option>
+                <mat-option value="konu">Belirli Konu Çalışması</mat-option>
+                <mat-option value="odev">Ödev Yardımı</mat-option>
+                <mat-option value="other">Diğer</mat-option>
+              </mat-select>
+              <mat-icon matPrefix>book</mat-icon>
+              <mat-error *ngIf="appointmentForm.get('subject')?.hasError('required')">
+                Ders konusu zorunludur
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Ders Formatı -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Ders Formatı</mat-label>
+              <mat-select formControlName="format">
+                <mat-option value="online">Online (Zoom/Google Meet)</mat-option>
+                <mat-option value="face-to-face">Yüz Yüze</mat-option>
+                <mat-option value="either">Farketmez</mat-option>
+              </mat-select>
+              <mat-icon matPrefix>computer</mat-icon>
+              <mat-error *ngIf="appointmentForm.get('format')?.hasError('required')">
+                Ders formatı zorunludur
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Notlar -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Ek Notlar (Opsiyonel)</mat-label>
+              <textarea 
+                matInput 
+                formControlName="notes" 
+                rows="3" 
+                placeholder="Belirtmek istediğiniz özel durumlar...">
+              </textarea>
+              <mat-icon matPrefix>note</mat-icon>
+            </mat-form-field>
+
+            <!-- Özet Bilgi -->
+            <div *ngIf="selectedDate && selectedTime" class="appointment-summary">
+              <h3>Randevu Özeti</h3>
+              <div class="summary-item">
+                <mat-icon>event</mat-icon>
+                <span>{{ selectedDate | date:'dd MMMM yyyy, EEEE':'tr' }}</span>
+              </div>
+              <div class="summary-item">
+                <mat-icon>schedule</mat-icon>
+                <span>{{ selectedTime?.time }}</span>
+              </div>
+              <div class="summary-item">
+                <mat-icon>timer</mat-icon>
+                <span>60 Dakika</span>
+              </div>
+            </div>
+
+            <!-- Gönder Butonu -->
+            <div class="form-actions">
+              <button 
+                mat-raised-button 
+                color="primary" 
+                type="submit" 
+                [disabled]="appointmentForm.invalid || !selectedDate || !selectedTime || isSubmitting"
+                class="submit-button">
+                <mat-icon *ngIf="!isSubmitting">check_circle</mat-icon>
+                <mat-spinner *ngIf="isSubmitting" diameter="20"></mat-spinner>
+                {{ isSubmitting ? 'Randevu Oluşturuluyor...' : 'Randevuyu Onayla' }}
+              </button>
+            </div>
+
+            <!-- Başarı Mesajı -->
+            <div *ngIf="submitSuccess" class="success-message">
+              <mat-icon>check_circle</mat-icon>
+              <div>
+                <h4>Randevunuz Oluşturuldu!</h4>
+                <p>Detaylar email adresinize gönderildi. En kısa sürede onay mesajı alacaksınız.</p>
+              </div>
+            </div>
+
+            <!-- Hata Mesajı -->
+            <div *ngIf="submitError" class="error-message">
+              <mat-icon>error</mat-icon>
+              <div>
+                <h4>Bir Hata Oluştu</h4>
+                <p>Lütfen daha sonra tekrar deneyin veya iletişim sayfasından bize ulaşın.</p>
+              </div>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Alt Bilgi -->
+  <div class="bottom-info">
+    <mat-card>
+      <mat-card-content>
+        <div class="info-row">
+          <mat-icon>info</mat-icon>
+          <div>
+            <h4>Randevu Politikası</h4>
+            <ul>
+              <li>İlk ders ücretsiz deneme dersidir</li>
+              <li>Randevunuzu en az 24 saat önceden iptal edebilirsiniz</li>
+              <li>Online dersler için Zoom veya Google Meet kullanılır</li>
+              <li>Randevu onayı 24 saat içinde email ile gönderilir</li>
+            </ul>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

@@ -1,0 +1,198 @@
+<div class="contact-container">
+  <!-- Başlık -->
+  <section class="page-header">
+    <h1>İletişim</h1>
+    <p class="subtitle">Sorularınız için bana ulaşın, en kısa sürede dönüş yapacağım!</p>
+  </section>
+
+  <!-- Ana İçerik -->
+  <div class="content-wrapper">
+    <!-- Sol Taraf - İletişim Formu -->
+    <div class="form-section">
+      <mat-card>
+        <mat-card-header>
+          <mat-icon mat-card-avatar>email</mat-icon>
+          <mat-card-title>Mesaj Gönderin</mat-card-title>
+          <mat-card-subtitle>Formu doldurun, size geri dönüş yapalım</mat-card-subtitle>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="contact-form">
+            <!-- Ad Soyad -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Ad Soyad</mat-label>
+              <input matInput formControlName="name" placeholder="Adınız ve soyadınız">
+              <mat-icon matPrefix>person</mat-icon>
+              <mat-error *ngIf="contactForm.get('name')?.hasError('required')">
+                Ad soyad zorunludur
+              </mat-error>
+              <mat-error *ngIf="contactForm.get('name')?.hasError('minlength')">
+                En az 3 karakter olmalıdır
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Email -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Email</mat-label>
+              <input matInput type="email" formControlName="email" placeholder="ornek@email.com">
+              <mat-icon matPrefix>email</mat-icon>
+              <mat-error *ngIf="contactForm.get('email')?.hasError('required')">
+                Email zorunludur
+              </mat-error>
+              <mat-error *ngIf="contactForm.get('email')?.hasError('email')">
+                Geçerli bir email adresi giriniz
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Telefon -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Telefon</mat-label>
+              <input matInput formControlName="phone" placeholder="5XX XXX XX XX">
+              <mat-icon matPrefix>phone</mat-icon>
+              <mat-hint>Opsiyonel</mat-hint>
+            </mat-form-field>
+
+            <!-- Konu -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Konu</mat-label>
+              <mat-select formControlName="subject">
+                <mat-option value="general">Genel Bilgi</mat-option>
+                <mat-option value="appointment">Randevu Talebi</mat-option>
+                <mat-option value="pricing">Ücretlendirme</mat-option>
+                <mat-option value="other">Diğer</mat-option>
+              </mat-select>
+              <mat-icon matPrefix>topic</mat-icon>
+              <mat-error *ngIf="contactForm.get('subject')?.hasError('required')">
+                Konu seçimi zorunludur
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Mesaj -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Mesajınız</mat-label>
+              <textarea 
+                matInput 
+                formControlName="message" 
+                rows="6" 
+                placeholder="Mesajınızı buraya yazın...">
+              </textarea>
+              <mat-icon matPrefix>message</mat-icon>
+              <mat-hint>En az 10 karakter</mat-hint>
+              <mat-error *ngIf="contactForm.get('message')?.hasError('required')">
+                Mesaj zorunludur
+              </mat-error>
+              <mat-error *ngIf="contactForm.get('message')?.hasError('minlength')">
+                En az 10 karakter olmalıdır
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Gönder Butonu -->
+            <div class="form-actions">
+              <button 
+                mat-raised-button 
+                color="primary" 
+                type="submit" 
+                [disabled]="contactForm.invalid || isSubmitting"
+                class="submit-button">
+                <mat-icon *ngIf="!isSubmitting">send</mat-icon>
+                <mat-spinner *ngIf="isSubmitting" diameter="20"></mat-spinner>
+                {{ isSubmitting ? 'Gönderiliyor...' : 'Mesaj Gönder' }}
+              </button>
+            </div>
+
+            <!-- Başarı Mesajı -->
+            <div *ngIf="submitSuccess" class="success-message">
+              <mat-icon>check_circle</mat-icon>
+              <p>Mesajınız başarıyla gönderildi! En kısa sürede dönüş yapacağım.</p>
+            </div>
+
+            <!-- Hata Mesajı -->
+            <div *ngIf="submitError" class="error-message">
+              <mat-icon>error</mat-icon>
+              <p>Bir hata oluştu. Lütfen daha sonra tekrar deneyin veya direkt email gönderin.</p>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Sağ Taraf - İletişim Bilgileri -->
+    <aside class="info-section">
+      <!-- İletişim Bilgileri Kartı -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>contact_phone</mat-icon>
+          <mat-card-title>İletişim Bilgileri</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="contact-item">
+            <mat-icon color="primary">email</mat-icon>
+            <div>
+              <h4>Email</h4>
+              <a href="mailto:ornek@email.com">ornek@email.com</a>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <mat-icon color="primary">phone</mat-icon>
+            <div>
+              <h4>Telefon</h4>
+              <a href="tel:+905XXXXXXXXX">+90 5XX XXX XX XX</a>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <mat-icon color="primary">location_on</mat-icon>
+            <div>
+              <h4>Konum</h4>
+              <p>İstanbul, Türkiye</p>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <mat-icon color="primary">schedule</mat-icon>
+            <div>
+              <h4>Çalışma Saatleri</h4>
+              <p>Pazartesi - Cumartesi<br>09:00 - 20:00</p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Sosyal Medya Kartı -->
+      <mat-card class="info-card social-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>share</mat-icon>
+          <mat-card-title>Sosyal Medya</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p class="social-text">Beni sosyal medyadan da takip edebilirsiniz!</p>
+          <div class="social-buttons">
+            <button mat-mini-fab color="primary" aria-label="LinkedIn">
+              <mat-icon>business</mat-icon>
+            </button>
+            <button mat-mini-fab color="accent" aria-label="Instagram">
+              <mat-icon>camera_alt</mat-icon>
+            </button>
+            <button mat-mini-fab style="background-color: #25D366;" aria-label="WhatsApp">
+              <mat-icon>chat</mat-icon>
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Hızlı Randevu Kartı -->
+      <mat-card class="info-card cta-card">
+        <mat-card-content>
+          <mat-icon class="cta-icon">event_available</mat-icon>
+          <h3>Hızlı Randevu</h3>
+          <p>Doğrudan randevu almak ister misiniz?</p>
+          <button mat-raised-button color="accent" routerLink="/appointment" class="cta-button">
+            <mat-icon>event</mat-icon>
+            Randevu Al
+          </button>
+        </mat-card-content>
+      </mat-card>
+    </aside>
+  </div>
+</div>

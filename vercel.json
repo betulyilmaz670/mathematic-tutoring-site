@@ -1,0 +1,12 @@
+{
+  "buildCommand": "ng build --configuration production",
+  "outputDirectory": "dist/matematik-ders-sitesi",
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}
+
+
