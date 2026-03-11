@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SupabaseService } from '../../core/services/supabase.service';
+import emailjs from '@emailjs/browser';
 
 interface TimeSlot {
   time: string;
@@ -120,6 +121,7 @@ export class AppointmentComponent implements OnInit {
   //     });
   //   }
   // }
+
   async onSubmit(): Promise<void> {
   if (this.appointmentForm.valid && this.selectedDate && this.selectedTime) {
     this.isSubmitting = true;
@@ -150,7 +152,23 @@ export class AppointmentComponent implements OnInit {
     } else {
       console.log('Başarılı:', data);
       this.submitSuccess = true;
-      
+      // EmailJS ile mail gönder
+  await emailjs.send(
+    'servis_1j4rqv5',
+    'template_fm0ksaj',
+    {
+      from_name: this.appointmentForm.value.studentName,
+      from_email: this.appointmentForm.value.email,
+      phone: this.appointmentForm.value.phone,
+      date: this.selectedDate!.toLocaleDateString('tr-TR'),
+      time: this.selectedTime!.time,
+      subject: this.appointmentForm.value.subject,
+      message: this.appointmentForm.value.notes || 'Not girilmedi'
+    },
+    'TZgjfKYHC9aW01cK7'
+  );
+
+  this.submitSuccess = true;
       // Formu sıfırla
       this.appointmentForm.reset();
       this.selectedDate = null;

@@ -1,4 +1,4 @@
-<mat-toolbar color="primary" class="header">
+<!-- <mat-toolbar color="primary" class="header">
   <div class="container">
     <span class="logo" routerLink="/home">📐 Matematik Özel Ders</span>
     <span class="spacer"></span>
@@ -8,5 +8,33 @@
       <a mat-button routerLink="/appointment" routerLinkActive="active">Randevu Al</a>
       <a mat-button routerLink="/contact" routerLinkActive="active">İletişim</a>
     </nav>
+  </div>
+</mat-toolbar> -->
+
+<mat-toolbar color="primary" class="header">
+  <div class="container">
+    <span class="logo" routerLink="/home">📐 Matematik Özel Ders</span>
+    <span class="spacer"></span>
+    
+    <!-- Masaüstü menü -->
+    <nav class="nav-menu desktop-menu">
+      <a mat-button routerLink="/home" routerLinkActive="active">Ana Sayfa</a>
+      <a mat-button routerLink="/about" routerLinkActive="active">Hakkımda</a>
+      <a mat-button routerLink="/appointment" routerLinkActive="active">Randevu Al</a>
+      <a mat-button routerLink="/contact" routerLinkActive="active">İletişim</a>
+    </nav>
+
+    <!-- Mobil hamburger butonu -->
+    <button mat-icon-button class="mobile-menu-btn" (click)="toggleMenu()">
+      <mat-icon>{{ menuOpen ? 'close' : 'menu' }}</mat-icon>
+    </button>
+  </div>
+
+  <!-- Mobil menü -->
+  <div class="mobile-menu" *ngIf="menuOpen">
+    <a mat-button routerLink="/home" routerLinkActive="active" (click)="toggleMenu()">Ana Sayfa</a>
+    <a mat-button routerLink="/about" routerLinkActive="active" (click)="toggleMenu()">Hakkımda</a>
+    <a mat-button routerLink="/appointment" routerLinkActive="active" (click)="toggleMenu()">Randevu Al</a>
+    <a mat-button routerLink="/contact" routerLinkActive="active" (click)="toggleMenu()">İletişim</a>
   </div>
 </mat-toolbar>
