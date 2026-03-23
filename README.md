@@ -13,7 +13,7 @@ Site; ders içerikleri, hizmet tanıtımı ve iletişim bölümlerini içeren mo
 - TypeScript
 - HTML5
 - CSS3
-- JavaScript
+
 
 ## Özellikler
 - Responsive (mobil uyumlu) tasarım  
